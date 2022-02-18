@@ -67,11 +67,16 @@ For example, in the image below, we have added "**;C:\Python34.**"
 ![image](https://user-images.githubusercontent.com/83915691/154369290-60375fb6-b907-4f7d-ac34-1425332b9b44.png)
 1. Click **OK** and close all windows.   
 
-**Command Prompt or Powershell Usage**  
-By setting this up, you can execute Python scripts like this:  
-`python script.py`
+## 7. Python Package Import  
+1. Open command prompt or PowerShell in Admin Mode.  
+1. Install discord.py  
+`python3 -m pip install -U discord.py`  
+1. Install discord-py-slash-command.py  
+`sudo -H pip3 install -U discord-py-slash-command`  
+1. Install python-dateutil.py  
+`sudo -H pip3 install python-dateutil`  
 
-## 7. Starting the bot  
+## 8. Starting the bot  
 1. Open a command window at the root on the app  
 1. Run `python main.py` to start the bot  
 1. Crtl+C to stop the bot.  
@@ -80,19 +85,15 @@ or
 1. Double click the shortcut to run the script.  
 
 
-
 ## Linux Setup  
-Install pip  
-`sudo apt install python3-pip`
-
-Install discord.py  
-`python3 -m pip install -U discord.py`
-
-Install discord-py-slash-command.py  
-`sudo -H pip3 install -U discord-py-slash-command`
-
-Install python-dateutil.py  
-`sudo -H pip3 install python-dateutil`
+1. Install pip  
+`sudo apt install python3-pip`  
+1. Install discord.py  
+`python3 -m pip install -U discord.py`  
+1. Install discord-py-slash-command.py  
+`sudo -H pip3 install -U discord-py-slash-command`  
+1. Install python-dateutil.py  
+`sudo -H pip3 install python-dateutil`  
 
 **Running the bot as a background service**  
 Review [Service.MD](https://github.com/minerminer4949/Discord-NFT-Listing-Bot/archive/refs/heads/Service.MD)
