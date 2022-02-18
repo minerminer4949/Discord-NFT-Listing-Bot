@@ -70,11 +70,13 @@ For example, in the image below, we have added "**;C:\Python34.**"
 ## 7. Python Package Import  
 1. Open command prompt or PowerShell in Admin Mode.  
 1. Install discord.py  
-`python3 -m pip install -U discord.py`  
+`python -m pip install -U discord.py`  
 1. Install discord-py-slash-command.py  
-`sudo -H pip3 install -U discord-py-slash-command`  
+`python -m pip install -U discord-py-slash-command`  
 1. Install python-dateutil.py  
-`sudo -H pip3 install python-dateutil`  
+`python -m pip install python-dateutil`  
+1. Install requests.py  
+`python -m pip install requests`  
 
 ## 8. Starting the bot  
 1. Open a command window at the root on the app  
@@ -94,6 +96,8 @@ or
 `sudo -H pip3 install -U discord-py-slash-command`  
 1. Install python-dateutil.py  
 `sudo -H pip3 install python-dateutil`  
+1. Install requests.py  
+`sudo -H pip3 install requests`  
 
 **Running the bot as a background service**  
 Review [Service.MD](https://github.com/minerminer4949/Discord-NFT-Listing-Bot/archive/refs/heads/Service.MD)
