@@ -38,6 +38,7 @@ Listing will be posted from oldest to newst each run. If there are no new listin
 1. Set the Discord `API_TOKEN`
 1. Set the Discord `CHANNEL_ID` where the bot should post listings
 1. Set the Contract `ADDRESS`
+1. Set the Max Price `MAX_PRICE` only post listing below this price(default=10000)
 1. Set the Opensea `API Key`
 
 ```
@@ -47,6 +48,7 @@ CHANNEL_ID=
 
 [CONTRACT]
 ADDRESS=0x5aeb2a703323f69b20f397bcb7b38610ec37237b 
+MAX_PRICE=0.0
 
 [OPENSEA]
 API_KEY=
