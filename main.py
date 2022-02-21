@@ -22,10 +22,20 @@ config.read(CONFIG_FILE)
 
 # Discord settings
 DISCORD_API_TOKEN=config.get('DISCORD','API_TOKEN')
-discord_channel_id=int(config.get('DISCORD','CHANNEL_ID'))   
+
+DISCORD_CHANNEL_ID=0
+try:            
+    DISCORD_CHANNEL_ID=int(config.get('DISCORD','CHANNEL_ID'))  
+except Exception as e:
+    DISCORD_CHANNEL_ID=0 
 
 # Contract settings
 CONTRACT_ADDRESS=config.get('CONTRACT','ADDRESS')
+MAX_PRICE=10000.0
+try:            
+    MAX_PRICE=float(config.get('CONTRACT','MAX_PRICE'))     
+except Exception as e:
+    MAX_PRICE=10000.0
 
 # Opensea Settings
 OS_API_KEY=config.get('OPENSEA','API_KEY')
@@ -35,7 +45,7 @@ def save_last_run_time(time):
     try:
         with open('lastrun.txt', 'w') as f:
             f.write(str(time))
-            print(time)
+            #print(time)
     except Exception as e:
             print('Bad last run time in lastrun.txt. defaulting last run time to 1 hour ago. ' + str(e))
 
@@ -47,7 +57,7 @@ class MyListingBot(Bot):
         # start the task
         self.get_listings.start()
 
-    @tasks.loop(seconds=60)
+    @tasks.loop(seconds=120)
     async def get_listings(self):
         print('Listing activity check started.')
         try:          
@@ -78,7 +88,7 @@ class MyListingBot(Bot):
                 sorted_event_list.insert(0, event_temp)
 
             for asset_event in sorted_event_list:
-                print('Listing event')
+                #print('Listing event')
                 # Get the json data.
                 token_id = asset_event.get('asset').get('token_id')
                 image_url=asset_event.get('asset').get('image_preview_url')
@@ -89,40 +99,44 @@ class MyListingBot(Bot):
                 if(asset_event.get('seller').get('user') != None):
                    seller_name = asset_event.get('seller').get('user').get('username')
 
-                # format the listing price
-                formatted_value='0.0'
-                value_temp=str(starting_price)
-                if(len(value_temp) > 18):
-                    formatted_value = (value_temp[:(len(value_temp) - 18)] + '.' + value_temp[(len(value_temp) - 18):])[:5]
-                else:
-                    formatted_value = ('0.' + str(value_temp).rjust(18, '0'))[:5]
-                formatted_value = formatted_value + ' ⧫'
-
                 # Add 1 second to the last listing timestamp.
                 last_listing_timestamp=asset_event.get('created_date')
                 parsed_time=parser.parse(last_listing_timestamp)                
                 added_seconds = timedelta(0, 1)
                 parsed_time = parsed_time + added_seconds
                 last_listing_timestamp = (parsed_time.isoformat())[:19] + 'Z'
-                
-                # Format the discord post.
-                embed=Embed(title=asset_name, 
-                            type='rich',
-                            url='https://opensea.io/assets/' + str(CONTRACT_ADDRESS) + '/' + str(token_id), 
-                            color = Color.green(), 
-                            description='was just listed for ' + str(formatted_value) + ' \n')
-                embed.set_thumbnail(url=image_url)  
-                embed.add_field(name='**Seller**', 
-                                value='[' + str(seller_name) + '](https://opensea.io/' + str(seller_address) + ')', 
-                                inline='true')               
-                embed.set_footer(text='Data provided by OpenSea', 
-                                icon_url='https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.png')
 
-                # Set the channel
-                channel = self.get_channel(discord_channel_id)
+                 # format the listing price
+                formatted_value='0.0'
+                eth_price_human = float("0.0")
+                value_temp=str(starting_price)
+                if(len(value_temp) > 18):
+                    formatted_value = (value_temp[:(len(value_temp) - 18)] + '.' + value_temp[(len(value_temp) - 18):])[:5]
+                    eth_price_human = float(formatted_value)
+                else:
+                    formatted_value = ('0.' + str(value_temp).rjust(18, '0'))[:5]                    
+                    eth_price_human = float(formatted_value)
+                formatted_value = formatted_value + ' ⧫'  
 
-                # Send the message
-                await channel.send(embed=embed)
+                if(eth_price_human <= MAX_PRICE):                
+                    # Format the discord post.
+                    embed=Embed(title=asset_name, 
+                                type='rich',
+                                url='https://opensea.io/assets/' + str(CONTRACT_ADDRESS) + '/' + str(token_id), 
+                                color = Color.green(), 
+                                description='was just listed for ' + str(formatted_value) + ' \n')
+                    embed.set_thumbnail(url=image_url)  
+                    embed.add_field(name='**Seller**', 
+                                    value='[' + str(seller_name) + '](https://opensea.io/' + str(seller_address) + ')', 
+                                    inline='true')               
+                    embed.set_footer(text='Data provided by OpenSea', 
+                                    icon_url='https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.png')
+
+                    # Set the channel
+                    channel = self.get_channel(DISCORD_CHANNEL_ID)
+
+                    # Send the message
+                    await channel.send(embed=embed)
             
                 save_last_run_time(parsed_time.timestamp())                
             print('Listing activity check complete')
