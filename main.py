@@ -62,7 +62,7 @@ class MyListingBot(Bot):
         print('Listing activity check started.')
         try:          
             # Last run time
-            presentDate = datetime.now()
+            presentDate = datetime.utcnow()
             unix_timestamp = datetime.timestamp(presentDate) - 3600
             try:            
                 with open('lastrun.txt') as f:
@@ -75,9 +75,8 @@ class MyListingBot(Bot):
             
             parsed_last_run_time = datetime.fromtimestamp(unix_timestamp).strftime('%Y-%m-%dT%H:%M:%SZ')
             last_listing_timestamp=parsed_last_run_time
-            lookup_offset=0
             
-            events_url = 'https://api.opensea.io/api/v1/events?only_opensea=false&offset=' + str(lookup_offset) + '&limit=10&asset_contract_address=' + str(CONTRACT_ADDRESS) + '&event_type=created&occurred_after=' + str(last_listing_timestamp)
+            events_url = 'https://api.opensea.io/api/v1/events?only_opensea=false&asset_contract_address=' + str(CONTRACT_ADDRESS) + '&event_type=created&occurred_after=' + str(last_listing_timestamp)
             #print(events_url)
             events_response = requests.get(events_url, headers=headers)
             json_data = events_response.json()
